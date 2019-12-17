@@ -2,6 +2,7 @@
 using System.IO;
 using System.Reflection;
 using System.Text;
+using System;
 
 namespace TechJobsConsole
 {
@@ -38,6 +39,34 @@ namespace TechJobsConsole
             return values;
         }
 
+        public static List<Dictionary<string,string >> FindByValue(string value)
+        {
+            int valueCount; //Counter for value occurence in each record, each item
+            LoadData();
+            List<Dictionary<string, string>> jobs =new List<Dictionary<string, string>>();
+           // Dictionary<string, string> AllJobsNew = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            
+
+            foreach (Dictionary<string,string> item in AllJobs)
+            {
+                valueCount = 0;//Counter reset for each new item
+               
+                foreach (var job in item.Values)// access all values of a paryicular dictionar entry
+                {
+                    
+                    if (job.ToUpper().Contains(value.ToUpper()) && valueCount.Equals(0))//To convert to case insensitive comparision
+                    {
+                        valueCount += 1;//Keep count and avoid duplication
+                        jobs.Add(item);
+                    }
+                    
+                    
+                }
+                
+            }
+            return jobs;
+        }
+
         public static List<Dictionary<string, string>> FindByColumnAndValue(string column, string value)
         {
             // load data, if not already loaded
@@ -49,7 +78,7 @@ namespace TechJobsConsole
             {
                 string aValue = row[column];
 
-                if (aValue.Contains(value))
+                if (aValue.ToUpper().Contains(value.ToUpper()))//To convert to case insensitive comparision
                 {
                     jobs.Add(row);
                 }
